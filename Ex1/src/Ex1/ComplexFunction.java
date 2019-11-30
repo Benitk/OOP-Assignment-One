@@ -77,12 +77,18 @@ public class ComplexFunction implements complex_function {
 	}
 	
 	public ComplexFunction(function f) {
-			this.Complex_root = Complexfunc_Recrusive(f.toString(), Complex_root);
+		if(f == null) {
+			throw new RuntimeException("Error: Not Valid Function");
+		}
+		this.Complex_root = Complexfunc_Recrusive(f.toString(), Complex_root);
 	}
 	
 	
 
 	public ComplexFunction(String s, function f1, function f2) {
+		if(f1 == null || f2 == null) {
+			throw new RuntimeException("Error: Not Valid Function");
+		}
 		try {
 			// incase Operation dont in enum
 			this.Complex_root = new Function_Node(null, Operation.valueOf(s));
@@ -93,7 +99,7 @@ public class ComplexFunction implements complex_function {
 		}
 		this.Complex_root.left = Complexfunc_Recrusive(f1.toString(), Complex_root.left);
 		this.Complex_root.right = Complexfunc_Recrusive(f2.toString(), Complex_root.right);
-		}
+	}
 	
 	public String toString() {
 		String ans = printPostorder(this.Complex_root);
@@ -119,14 +125,55 @@ public class ComplexFunction implements complex_function {
 
 
 	@Override
+	//compute f(x) for Complex functions using recrusion side function
 	public double f(double x) {
-		// TODO Auto-generated method stub
-		return 0;
+		double ans = fx(this.Complex_root, x);
+		return ans;
 	}
+	
+	
+	private double fx(Function_Node current, double x){ 
 
+        if (current.oper == Operation.None && current.func == null) {
+            return fx(current.left, x);
+        }
+        // current has function
+        else if(current.oper == Operation.None) {
+        	return current.func.f(x);
+        }
+        // current has operation diffrent from none compute is fx
+        switch(current.oper.toString()){
+        	case "Plus":
+        		return fx(current.left, x) + fx(current.right, x);
+        		
+        	case "Times":
+        		return fx(current.left, x) * fx(current.right, x);
+        		
+        	case "Divid":
+        		return fx(current.left, x) / fx(current.right, x);
+        		
+        	case "Max":
+        		return Math.max(fx(current.left, x),fx(current.right, x));
+        		
+        	case "Min":
+        		return Math.min(fx(current.left, x),fx(current.right, x));
+        		
+        	case "Comp":
+        		return fx(current.left,fx(current.right, x));
+        		
+        	default:
+        		throw new RuntimeException("Error: Not Valid Operation");
+        }
+	}
 	@Override
+	//creating new ComplexFunction using tmp polynom, then creating other complexroot from the string and replace the root
 	public function initFromString(String s) {
-		return null;
+		Function_Node new_root = null;
+		new_root = Complexfunc_Recrusive(s, new_root);
+		ComplexFunction cf = new ComplexFunction(new Polynom("1"));
+		cf.Complex_root = new_root;
+		function f = new ComplexFunction(cf);
+		return f;
 	}
 
 	@Override
@@ -137,50 +184,79 @@ public class ComplexFunction implements complex_function {
 
 	@Override
 	public void plus(function f1) {
-		// TODO Auto-generated method stub
-		
+		//pointer to the complex root
+		ComplexFunction right_subtree = new ComplexFunction(f1);
+		Function_Node left_subtree = Complex_root;
+		this.Complex_root = new Function_Node(null, Operation.Plus);
+		this.Complex_root.left = left_subtree;
+		this.Complex_root.right = right_subtree.Complex_root;
 	}
 
 	@Override
 	public void mul(function f1) {
-		// TODO Auto-generated method stub
-		
+		//pointer to the complex root
+		ComplexFunction right_subtree = new ComplexFunction(f1);
+		Function_Node left_subtree = Complex_root;
+		this.Complex_root = new Function_Node(null, Operation.Times);
+		this.Complex_root.left = left_subtree;
+		this.Complex_root.right = right_subtree.Complex_root;
 	}
 
 	@Override
 	public void div(function f1) {
-		// TODO Auto-generated method stub
-		
+		//pointer to the complex root
+		ComplexFunction right_subtree = new ComplexFunction(f1);
+		Function_Node left_subtree = Complex_root;
+		this.Complex_root = new Function_Node(null, Operation.Divid);
+		this.Complex_root.left = left_subtree;
+		this.Complex_root.right = right_subtree.Complex_root;
 	}
 
 	@Override
 	public void max(function f1) {
-		// TODO Auto-generated method stub
-		
+		//pointer to the complex root
+		ComplexFunction right_subtree = new ComplexFunction(f1);
+		Function_Node left_subtree = Complex_root;
+		this.Complex_root = new Function_Node(null, Operation.Max);
+		this.Complex_root.left = left_subtree;
+		this.Complex_root.right = right_subtree.Complex_root;
 	}
 
 	@Override
 	public void min(function f1) {
-		// TODO Auto-generated method stub
-		
+		//pointer to the complex root
+		ComplexFunction right_subtree = new ComplexFunction(f1);
+		Function_Node left_subtree = Complex_root;
+		this.Complex_root = new Function_Node(null, Operation.Min);
+		this.Complex_root.left = left_subtree;
+		this.Complex_root.right = right_subtree.Complex_root;
 	}
 
 	@Override
 	public void comp(function f1) {
-		// TODO Auto-generated method stub
-		
+		//pointer to the complex root
+		ComplexFunction right_subtree = new ComplexFunction(f1);
+		Function_Node left_subtree = Complex_root;
+		this.Complex_root = new Function_Node(null, Operation.Comp);
+		this.Complex_root.left = left_subtree;
+		this.Complex_root.right = right_subtree.Complex_root;
 	}
 
 	@Override
-	public function left() {
-		// TODO Auto-generated method stub
-		return null;
+	// creating temp Complex function
+	public function left() {;
+		ComplexFunction cf = new ComplexFunction(new Polynom("1"));
+		cf.Complex_root = this.Complex_root.left;
+		function f = new ComplexFunction(cf);
+		return f;
 	}
 
 	@Override
 	public function right() {
-		// TODO Auto-generated method stub
-		return null;
+		ComplexFunction cf = new ComplexFunction(new Polynom("1"));
+		cf.Complex_root = this.Complex_root.right;
+		function f = new ComplexFunction(cf);
+		return f;
 	}
 	@Override
 	public Operation getOp() {
