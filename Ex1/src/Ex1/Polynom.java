@@ -93,7 +93,7 @@ public class Polynom implements Polynom_able{
 	@Override
 	public void add(Polynom_able p1) {
 		// TODO Auto-generated method stub
-		Polynom_able temp = p1.copy();
+		Polynom_able temp = (Polynom_able) p1.copy();
 		Iterator<Monom> iter = temp.iteretor();
 		Monom m;
 		while(iter.hasNext()) {
@@ -130,7 +130,7 @@ public class Polynom implements Polynom_able{
 	@Override
 	public void substract(Polynom_able p1) {
 		// TODO Auto-generated method stub
-		Polynom_able temp = p1.copy();
+		Polynom_able temp = (Polynom_able) p1.copy();
 		Iterator<Monom> iter = temp.iteretor();
 		Monom m;
 		// multiply every monom in p1 with monom minus1;
@@ -173,8 +173,8 @@ public class Polynom implements Polynom_able{
 	public void multiply(Polynom_able p1) {
 		// TODO Auto-generated method stub
 		// in case p1 is this.polynom , need to copy twice 
-		Polynom_able temp = this.copy();
-		Polynom_able temp1 = p1.copy();
+		Polynom_able temp = (Polynom_able) this.copy();
+		Polynom_able temp1 = (Polynom_able) p1.copy();
 		this.get_polynom().clear();
 		Iterator<Monom> iter;
 		Iterator<Monom> iter1 = temp1.iteretor();
@@ -206,7 +206,7 @@ public class Polynom implements Polynom_able{
 			return false;
 		}
 		Polynom p = new Polynom(p1.toString());
-		Polynom_able temp = this.copy();
+		Polynom_able temp = (Polynom_able) this.copy();
 		if(size(p) != size(temp)) {
 			return false;
 		}
@@ -225,7 +225,7 @@ public class Polynom implements Polynom_able{
 	public boolean equals1(Object p1) {
 		// TODO Auto-generated method stub
 		Polynom p = new Polynom(p1.toString());
-		Polynom_able temp = this.copy();
+		Polynom_able temp = (Polynom_able) this.copy();
 		if(size(p) != size(temp)) {
 			return false;
 		}
@@ -318,18 +318,15 @@ public class Polynom implements Polynom_able{
 	 * copy polynom by iterate on each monom string then create new polynom 
 	 */
 	@Override
-	public Polynom_able copy() {
+	public function copy() {
 		// TODO Auto-generated method stub
-		Polynom p1;
-		String polynom1 = "";
-		Iterator<Monom> iter = this.iteretor();
-		Monom m;
-		while(iter.hasNext()) {
-			m = iter.next();
-			polynom1 += m.toString().concat(" ");
-		}
-		p1 = new Polynom(polynom1);
+		function p1 = new Polynom(this.toString());
 		return p1;
+		/*
+		 * Polynom p1; String polynom1 = ""; Iterator<Monom> iter = this.iteretor();
+		 * Monom m; while(iter.hasNext()) { m = iter.next(); polynom1 +=
+		 * m.toString().concat(" "); } p1 = new Polynom(polynom1); return p1;
+		 */
 	}
 	/** 
 	 * this method returns the derivative polynom of this.

@@ -4,19 +4,6 @@ import java.util.ArrayList;
 
 
 public class ComplexFunction implements complex_function {
-	private class Function_Node{ 
-		Operation oper;
-		function func; 
-		Function_Node left, right; 
-
-		public Function_Node(function f, Operation o) { 
-			this.func = f; 
-			this.oper = o;
-			this.left = this.right = null; 
-		} 
-	}
-	private Function_Node Complex_root;
-
 	
 	// split the string first index is Operation , left side of comma, right side of comma
 	private ArrayList<String> Peeling(String s) {
@@ -57,7 +44,7 @@ public class ComplexFunction implements complex_function {
 		if(arr.get(0) == "") {
 			current = new Function_Node(null, Operation.None);
 			//current.left = new Function_Node(f, Operation.None);
-			current.left = new Function_Node(new Polynom(func_s), Operation.None);
+			current.setLeft(new Function_Node(new Polynom(func_s), Operation.None));
 		}
 		else {
 			try {
@@ -69,9 +56,9 @@ public class ComplexFunction implements complex_function {
 				current = new Function_Node(null, Operation.Error);
 			}
 			// set left 
-			current.left = Complexfunc_Recrusive(arr.get(1), current.left);
+			current.setLeft(Complexfunc_Recrusive(arr.get(1), current.getLeft()));
 			// set right
-			current.right = Complexfunc_Recrusive(arr.get(2), current.right);
+			current.setRight(Complexfunc_Recrusive(arr.get(2), current.getRight()));
 		}
 		return current;
 	}
@@ -80,7 +67,7 @@ public class ComplexFunction implements complex_function {
 		if(f == null) {
 			throw new RuntimeException("Error: Not Valid Function");
 		}
-		this.Complex_root = Complexfunc_Recrusive(f.toString(), Complex_root);
+		this.setComplex_root(Complexfunc_Recrusive(f.toString(), this.getComplex_root()));
 	}
 	
 	
@@ -91,18 +78,18 @@ public class ComplexFunction implements complex_function {
 		}
 		try {
 			// incase Operation dont in enum
-			this.Complex_root = new Function_Node(null, Operation.valueOf(s));
+			this.setComplex_root(new Function_Node(null, Operation.valueOf(s)));
 		}
 		catch(Exception e) {
 			// Operation isnt valid
-			this.Complex_root = new Function_Node(null, Operation.Error);
+			this.setComplex_root(new Function_Node(null, Operation.Error));
 		}
-		this.Complex_root.left = Complexfunc_Recrusive(f1.toString(), Complex_root.left);
-		this.Complex_root.right = Complexfunc_Recrusive(f2.toString(), Complex_root.right);
+		this.getComplex_root().setLeft(Complexfunc_Recrusive(f1.toString(), this.getComplex_root().getLeft()));
+		this.getComplex_root().setRight(Complexfunc_Recrusive(f2.toString(), this.getComplex_root().getRight()));
 	}
 	
 	public String toString() {
-		String ans = printPostorder(this.Complex_root);
+		String ans = printPostorder(this.getComplex_root());
 		return ans;
 	}
 	
@@ -112,54 +99,54 @@ public class ComplexFunction implements complex_function {
 		/*
 		 * if(current == null) { return ""; }
 		 */
-        if (current.oper == Operation.None && current.func == null) {
-            return printPostorder(current.left);
+        if (current.getOper() == Operation.None && current.getFunc() == null) {
+            return printPostorder(current.getLeft());
         }
         // current has function
-        else if(current.oper == Operation.None) {
-        	return current.func.toString();
+        else if(current.getOper() == Operation.None) {
+        	return current.getFunc().toString();
         }
         // current has oper diffrent from none
-        return current.oper.toString().concat("(".concat(printPostorder(current.left).concat(",".concat(printPostorder(current.right).concat(")")))));
+        return current.getOper().toString().concat("(".concat(printPostorder(current.getLeft()).concat(",".concat(printPostorder(current.getRight()).concat(")")))));
     } 
 
 
 	@Override
 	//compute f(x) for Complex functions using recrusion side function
 	public double f(double x) {
-		double ans = fx(this.Complex_root, x);
+		double ans = fx(this.getComplex_root(), x);
 		return ans;
 	}
 	
 	
 	private double fx(Function_Node current, double x){ 
 
-        if (current.oper == Operation.None && current.func == null) {
-            return fx(current.left, x);
+        if (current.getOper() == Operation.None && current.getFunc() == null) {
+            return fx(current.getLeft(), x);
         }
         // current has function
-        else if(current.oper == Operation.None) {
-        	return current.func.f(x);
+        else if(current.getOper() == Operation.None) {
+        	return current.getFunc().f(x);
         }
         // current has operation diffrent from none compute is fx
-        switch(current.oper.toString()){
+        switch(current.getOper().toString()){
         	case "Plus":
-        		return fx(current.left, x) + fx(current.right, x);
+        		return fx(current.getLeft(), x) + fx(current.getRight(), x);
         		
         	case "Times":
-        		return fx(current.left, x) * fx(current.right, x);
+        		return fx(current.getLeft(), x) * fx(current.getRight(), x);
         		
         	case "Divid":
-        		return fx(current.left, x) / fx(current.right, x);
+        		return fx(current.getLeft(), x) / fx(current.getRight(), x);
         		
         	case "Max":
-        		return Math.max(fx(current.left, x),fx(current.right, x));
+        		return Math.max(fx(current.getLeft(), x),fx(current.getRight(), x));
         		
         	case "Min":
-        		return Math.min(fx(current.left, x),fx(current.right, x));
+        		return Math.min(fx(current.getLeft(), x),fx(current.getRight(), x));
         		
         	case "Comp":
-        		return fx(current.left,fx(current.right, x));
+        		return fx(current.getLeft(),fx(current.getRight(), x));
         		
         	default:
         		throw new RuntimeException("Error: Not Valid Operation");
@@ -171,82 +158,83 @@ public class ComplexFunction implements complex_function {
 		Function_Node new_root = null;
 		new_root = Complexfunc_Recrusive(s, new_root);
 		ComplexFunction cf = new ComplexFunction(new Polynom("1"));
-		cf.Complex_root = new_root;
+		cf.setComplex_root(new_root);
 		function f = new ComplexFunction(cf);
 		return f;
 	}
 
 	@Override
 	public function copy() {
-		// TODO Auto-generated method stub
-		return null;
+		function f = new ComplexFunction(this);
+		return f;
 	}
 
 	@Override
 	public void plus(function f1) {
 		//pointer to the complex root
 		ComplexFunction right_subtree = new ComplexFunction(f1);
-		Function_Node left_subtree = Complex_root;
-		this.Complex_root = new Function_Node(null, Operation.Plus);
-		this.Complex_root.left = left_subtree;
-		this.Complex_root.right = right_subtree.Complex_root;
+		Function_Node left_subtree = this.getComplex_root();
+		this.setComplex_root(new Function_Node(null, Operation.Plus));
+		this.getComplex_root().setLeft(left_subtree);
+		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
 
 	@Override
 	public void mul(function f1) {
 		//pointer to the complex root
 		ComplexFunction right_subtree = new ComplexFunction(f1);
-		Function_Node left_subtree = Complex_root;
-		this.Complex_root = new Function_Node(null, Operation.Times);
-		this.Complex_root.left = left_subtree;
-		this.Complex_root.right = right_subtree.Complex_root;
+		Function_Node left_subtree = this.getComplex_root();
+		this.setComplex_root(new Function_Node(null, Operation.Times));
+		this.getComplex_root().setLeft(left_subtree);
+		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
 
 	@Override
 	public void div(function f1) {
 		//pointer to the complex root
+		//pointer to the complex root
 		ComplexFunction right_subtree = new ComplexFunction(f1);
-		Function_Node left_subtree = Complex_root;
-		this.Complex_root = new Function_Node(null, Operation.Divid);
-		this.Complex_root.left = left_subtree;
-		this.Complex_root.right = right_subtree.Complex_root;
+		Function_Node left_subtree = this.getComplex_root();
+		this.setComplex_root(new Function_Node(null, Operation.Divid));
+		this.getComplex_root().setLeft(left_subtree);
+		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
 
 	@Override
 	public void max(function f1) {
 		//pointer to the complex root
 		ComplexFunction right_subtree = new ComplexFunction(f1);
-		Function_Node left_subtree = Complex_root;
-		this.Complex_root = new Function_Node(null, Operation.Max);
-		this.Complex_root.left = left_subtree;
-		this.Complex_root.right = right_subtree.Complex_root;
+		Function_Node left_subtree = this.getComplex_root();
+		this.setComplex_root(new Function_Node(null, Operation.Max));
+		this.getComplex_root().setLeft(left_subtree);
+		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
 
 	@Override
 	public void min(function f1) {
 		//pointer to the complex root
 		ComplexFunction right_subtree = new ComplexFunction(f1);
-		Function_Node left_subtree = Complex_root;
-		this.Complex_root = new Function_Node(null, Operation.Min);
-		this.Complex_root.left = left_subtree;
-		this.Complex_root.right = right_subtree.Complex_root;
+		Function_Node left_subtree = this.getComplex_root();
+		this.setComplex_root(new Function_Node(null, Operation.Min));
+		this.getComplex_root().setLeft(left_subtree);
+		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
 
 	@Override
 	public void comp(function f1) {
 		//pointer to the complex root
 		ComplexFunction right_subtree = new ComplexFunction(f1);
-		Function_Node left_subtree = Complex_root;
-		this.Complex_root = new Function_Node(null, Operation.Comp);
-		this.Complex_root.left = left_subtree;
-		this.Complex_root.right = right_subtree.Complex_root;
+		Function_Node left_subtree = this.getComplex_root();
+		this.setComplex_root(new Function_Node(null, Operation.Comp));
+		this.getComplex_root().setLeft(left_subtree);
+		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
 
 	@Override
 	// creating temp Complex function
 	public function left() {;
 		ComplexFunction cf = new ComplexFunction(new Polynom("1"));
-		cf.Complex_root = this.Complex_root.left;
+		cf.setComplex_root(this.getComplex_root().getLeft());
 		function f = new ComplexFunction(cf);
 		return f;
 	}
@@ -254,7 +242,7 @@ public class ComplexFunction implements complex_function {
 	@Override
 	public function right() {
 		ComplexFunction cf = new ComplexFunction(new Polynom("1"));
-		cf.Complex_root = this.Complex_root.right;
+		cf.setComplex_root(this.getComplex_root().getRight());
 		function f = new ComplexFunction(cf);
 		return f;
 	}
@@ -263,7 +251,57 @@ public class ComplexFunction implements complex_function {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public Function_Node getComplex_root() {
+		return this.Complex_root;
+	}
+	public void setComplex_root(Function_Node fn) {
+		this.Complex_root = fn;
+	}
 
 	/********* private fields ********/
+	private class Function_Node{ 
+		private Operation oper;
+		private function func; 
+		private Function_Node left, right; 
 
+		public Operation getOper() {
+			return oper;
+		}
+
+		public void setOper(Operation oper) {
+			this.oper = oper;
+		}
+
+		public function getFunc() {
+			return func;
+		}
+
+		public void setFunc(function func) {
+			this.func = func;
+		}
+
+		public Function_Node getLeft() {
+			return left;
+		}
+
+		public void setLeft(Function_Node left) {
+			this.left = left;
+		}
+
+		public Function_Node getRight() {
+			return right;
+		}
+
+		public void setRight(Function_Node right) {
+			this.right = right;
+		}
+
+		public Function_Node(function f, Operation o) { 
+			setFunc(f); 
+			setOper(o);
+			setLeft(null);
+			setRight(null); 
+		} 
+	}
+	private Function_Node Complex_root;
 }

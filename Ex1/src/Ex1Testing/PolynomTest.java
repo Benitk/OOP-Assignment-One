@@ -1,11 +1,14 @@
 package Ex1Testing;
 
+import Ex1.ComplexFunction;
+import Ex1.Monom;
 import Ex1.Polynom;
 import Ex1.Polynom_able;
+import Ex1.function;
 
 public class PolynomTest {
 	public static void main(String[] args) {
-		test1();
+		test2();
 	}
 	
 	/**
@@ -14,6 +17,21 @@ public class PolynomTest {
 	 * That the first part is considered good polynoms and the second part is considered bad polynoms
 	 * then printing the number of exceptions
 	 */
+	
+	private static void test2() {
+		Polynom p2 = new Polynom("2x^3 + 4");
+		Polynom p3 = new Polynom("3x^2 + 5x");
+		ComplexFunction cf3 = new ComplexFunction(p2);
+		ComplexFunction cf4 = new ComplexFunction("Comp",p2, p3);
+		ComplexFunction f4 = new ComplexFunction("Max",cf4, p3);
+		ComplexFunction f5 = new ComplexFunction("Times", new Polynom("3x^4+6x^2"), f4);
+		System.out.println(f4.toString());
+		function f = f4.copy();
+		System.out.println(f.toString());
+		ComplexFunction f6 = new ComplexFunction("Min",f4, f);
+		System.out.println(f6.toString());
+	}
+	
 	private static void test1() {
 	
 		
