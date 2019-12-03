@@ -4,91 +4,100 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+
 
 public class Functions_GUI  implements functions {
-	List<function> functions_list = new ArrayList<function>(); 
+
 	
 	
+	public Functions_GUI() {
+		setFunctions_list(new ArrayList<function>());
+	}
+
 	@Override
 	public int size() {
-		return functions_list.size();
+		return getFunctions_list().size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return functions_list.isEmpty();
+		return getFunctions_list().isEmpty();
 	}
 
 	@Override
 	public boolean contains(Object o) {
-		return functions_list.contains(o);
+		return getFunctions_list().contains(o);
 	}
 
 	@Override
 	public Iterator<function> iterator() {
-		return functions_list.iterator();
+		return getFunctions_list().iterator();
 	}
 
 	@Override
 	public Object[] toArray() {
-		return functions_list.toArray();
+		return getFunctions_list().toArray();
 	}
 
 	@Override
 	public <T> T[] toArray(T[] a) {
 		// TODO Auto-generated method stub
-		return functions_list.toArray(a);
+		return getFunctions_list().toArray(a);
 	}
 
 	@Override
 	public boolean add(function e) {
-		return functions_list.add(e);
+		return getFunctions_list().add(e);
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		return functions_list.remove(o);
+		return getFunctions_list().remove(o);
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		return functions_list.containsAll(c);
+		return getFunctions_list().containsAll(c);
 	}
 
 	@Override
 	public boolean addAll(Collection<? extends function> c) {
-		return functions_list.addAll(c);
+		return getFunctions_list().addAll(c);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		return functions_list.removeAll(c);
+		return getFunctions_list().removeAll(c);
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		return functions_list.retainAll(c);
+		return getFunctions_list().retainAll(c);
 	}
 
 	@Override
 	public void clear() {
-		functions_list.clear();
+		getFunctions_list().clear();
 		
 	}
 
 	@Override
+	/** 
+	 * source code for gson: https://www.mkyong.com/java/gson-streaming-to-read-and-write-json/?utm_source=mkyong.com&utm_medium=Referral&utm_campaign=afterpost-related&utm_content=link1
+	 * */
 	public void initFromFile(String file) throws IOException {
-		// TODO Auto-generated method stub
-		
+		this.getFunctions_list().clear();
+		Gson_Read_Write r = new Gson_Read_Write(file, this.getFunctions_list());
+		setFunctions_list(r.ReadFromFile());
 	}
 
 	@Override
 	public void saveToFile(String file) throws IOException {
-		// TODO Auto-generated method stub
+		Gson_Read_Write w = new Gson_Read_Write(file, this.getFunctions_list());
+		w.WriteToFile();
 		
 	}
-
+	// Overrite our list to new polynoms
 	@Override
 	public void drawFunctions(int width, int height, Range rx, Range ry, int resolution) {
 		// TODO Auto-generated method stub
@@ -100,5 +109,14 @@ public class Functions_GUI  implements functions {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	public ArrayList<function> getFunctions_list() {
+		return functions_list;
+	}
+	public void setFunctions_list(ArrayList<function> functions_list) {
+		this.functions_list = functions_list;
+	}
+/** **************** private methods and data ******/
+	private ArrayList<function> functions_list;
+	
 }

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import Ex1.Monom;
-import Ex1.function;
 
 class MonomTest1 {
 	Monom []m = new Monom[5];
@@ -97,12 +96,16 @@ class MonomTest1 {
 	}
 	@Test
 	void testInitFromString_Copy() {
+		int x = 2;
 		Monom m1 = new Monom("3");
 		String []ans = {"+1.0x^1", "-1.0x^1", "-4.6x^2", "+0.0x^0", "-2.6x^0"};
 		for(int i = 0; i < 5; i++) {
-			String expected = m1.initFromString(ans[i]).toString();
-			String actual = m[i].copy().toString();
-			assertEquals(expected, actual, "Test initFromString and Copy");
+			String expected_string = m1.initFromString(ans[i]).toString();
+			String actual_string = m[i].copy().toString();
+			double expected_f = m1.initFromString(ans[i]).f(x);
+			double actual_f = m[i].copy().f(x);
+			assertEquals(expected_string, actual_string, "Test initFromString and copy");
+			assertEquals(expected_f, actual_f, "Test initFromString and copy");
 		}
 	}
 }

@@ -18,10 +18,10 @@ class ComplexFunctonTest {
 	static void printinit() {
 		System.out.println("initialize array of ComplexFunctions before each test");
 		System.out.println("0,\n"
-				         + "Plus(+3.0x^2 +1.0x^1,-1.0x^4 +2.4x^2 +3.1x^0),\n"
-				         + "Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),\n"
-				         + "Min(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1),\n"
-				         + "Divid(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),Max(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1))");
+				         + "plus(+3.0x^2 +1.0x^1,-1.0x^4 +2.4x^2 +3.1x^0),\n"
+				         + "comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),\n"
+				         + "min(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1),\n"
+				         + "div(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),Max(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1))");
 	}
 	
 	@BeforeEach
@@ -33,24 +33,24 @@ class ComplexFunctonTest {
 		 Polynom p3 = new Polynom("+2.0x^3 +4.0x^0");
 		 Polynom p4 = new Polynom("+3.0x^2 +5.0x^1");
 		 cf[0] = new ComplexFunction(m);
-		 cf[1] = new ComplexFunction("Plus",p1, p2);
-		 cf[2] = new ComplexFunction("Comp",p3, p4);
-		 cf[3] = new ComplexFunction("Min", cf[2], p4);
-		 cf[4] = new ComplexFunction("Divid",cf[2], cf[3]);
+		 cf[1] = new ComplexFunction("plus",p1, p2);
+		 cf[2] = new ComplexFunction("comp",p3, p4);
+		 cf[3] = new ComplexFunction("min", cf[2], p4);
+		 cf[4] = new ComplexFunction("div",cf[2], cf[3]);
 	}
 	
 	@Test
 	void testToString() {
-		String []ans = {"+0.0x^0","Plus(+3.0x^2 +1.0x^1,-1.0x^4 +2.4x^2 +3.1x^0)","Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1)",
-				       "Min(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1)",
-				       "Divid(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),Min(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1))"};
+		String []ans = {"+0.0x^0","plus(+3.0x^2 +1.0x^1,-1.0x^4 +2.4x^2 +3.1x^0)","comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1)",
+				       "min(comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1)",
+				       "div(comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),min(comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1))"};
 		for(int i = 0; i < 5; i++) {
 			String expected = ans[i];
 			String actual = cf[i].toString();
 			assertEquals(expected, actual, "Test toString");
 		}
 	}
-	
+	// epsilon problem
 	@Test
 	void testF() {
 		int x = 2;

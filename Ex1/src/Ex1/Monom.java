@@ -82,12 +82,17 @@ public class Monom implements function{
 	 */
 	public void add(Monom m) {
 		/* try { */
-			if(getComp().compare(this, m) != 0) {
+		if(this.isZero()) {
+			this.set_coefficient(m.get_coefficient());
+			this.set_power(m.get_power());
+		}
+		else if(getComp().compare(this, m) != 0) {
 				throw new RuntimeException("Error: Power is different, Can't add");
 				}
-
+		else {
 			//Change only the coefficient, both monoms as same power
 			this.set_coefficient(this.get_coefficient() + m.get_coefficient());
+		}
 	}
 	/**
 	 * Multiply two monons

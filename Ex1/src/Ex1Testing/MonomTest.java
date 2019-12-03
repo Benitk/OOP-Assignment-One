@@ -35,7 +35,7 @@ public class MonomTest {
 		String monom_string = "";
 		int exception_counter = 0;
 		// good and bad example of monoms
-		String[] monoms = {"x", "-x", "-3.2X^2", "0", "-2.6","10x^1", "(x)","-5.5x3", "2x^2.5", "bx^3", "2x^^3","x^-1", "x^b", "3xx" };
+		String[] monoms = {"x", "-x", "-4.6X^2", "0", "-2.6","10x^1", "(x)","-5.5x3", "2x^2.5", "bx^3", "2x^^3","x^-1", "x^b", "3xx" };
 		Monom m_2x = new Monom("2x");
 	
 		for (int i = 0; i < monoms.length; i++) {

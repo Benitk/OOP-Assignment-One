@@ -18,18 +18,27 @@ public class PolynomTest {
 	 * then printing the number of exceptions
 	 */
 	
+	
+	
 	private static void test2() {
-		Polynom p2 = new Polynom("2x^3 + 4");
-		Polynom p3 = new Polynom("3x^2 + 5x");
-		ComplexFunction cf3 = new ComplexFunction(p2);
-		ComplexFunction cf4 = new ComplexFunction("Comp",p2, p3);
-		ComplexFunction f4 = new ComplexFunction("Max",cf4, p3);
-		ComplexFunction f5 = new ComplexFunction("Times", new Polynom("3x^4+6x^2"), f4);
-		System.out.println(f4.toString());
-		function f = f4.copy();
-		System.out.println(f.toString());
-		ComplexFunction f6 = new ComplexFunction("Min",f4, f);
-		System.out.println(f6.toString());
+		 Monom m = new Monom("0");
+		 Polynom p1 = new Polynom("+1.0x^1 + 3x^2");
+		 Polynom p2 = new Polynom("-1.0x^4 +2.4x^2 +3.1");
+		 Polynom p3 = new Polynom("+2.0x^3 +4.0x^0");
+		 Polynom p4 = new Polynom("+3.0x^2 +5.0x^1");
+		 ComplexFunction[] cf = new ComplexFunction[5];
+		cf[0] = new ComplexFunction(m);
+		 cf[1] = new ComplexFunction("plus",p1, p2);
+		 cf[2] = new ComplexFunction("comp",p3, p4);
+		 cf[3] = new ComplexFunction("min", cf[2], p4);
+		 cf[4] = new ComplexFunction("div",cf[2], cf[3]);
+		 System.out.println(cf[0].f(2));
+		 System.out.println(cf[1].f(2));
+		 System.out.println(cf[2].f(2));
+		 System.out.println(cf[3].f(2));
+		 System.out.println(cf[4].toString());
+		 function f =cf[0].initFromString(cf[4].toString());
+		 System.out.println(f);
 	}
 	
 	private static void test1() {
