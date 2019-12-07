@@ -194,54 +194,70 @@ public class Polynom implements Polynom_able{
 		this.get_polynom().sort(Monom.getComp());
 	}
 	/**
-	 * compare two polynoms using private size function to get the p1 size
+	 * compare polynom with function than check what instanceof 
 	 * then iterate both and check if each monom is equal
 	 * @param o2
 	 * @return true if equal else false
 	 */
 	@Override
-	public boolean equals(Object p1) {
+	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub
-		if(p1 == null || !(p1 instanceof Polynom) && !(p1 instanceof Monom)) {
+		if(obj == null || !(obj instanceof function)) {
 			return false;
 		}
-		Polynom p = new Polynom(p1.toString());
-		Polynom_able temp = (Polynom_able) this.copy();
-		if(size(p) != size(temp)) {
-			return false;
-		}
-		Iterator<Monom> iter = p.iteretor();
-		Iterator<Monom> iter1 = temp.iteretor();
-		Monom m, m1;
-		while(iter1.hasNext() && iter.hasNext()) {
-			m = iter.next(); m1 = iter1.next();
-			if(!(m.equals(m1))) {
+		else if(!(obj instanceof ComplexFunction)) {
+			Polynom p = new Polynom(obj.toString());
+			Polynom temp = (Polynom) this.copy();
+			// p or temp has the zero_Monom
+			int index_p = p.get_polynom().size() - 1;
+			int index_temp = temp.get_polynom().size() - 1;
+			if(p.get_polynom().get(index_p).isZero()){
+				p.get_polynom().remove(index_p);
+			}
+			if(temp.get_polynom().get(index_temp).isZero()){
+				temp.get_polynom().remove(index_temp);
+			}
+			if(p.get_polynom().size() != temp.get_polynom().size()) {
 				return false;
 			}
+			Iterator<Monom> iter = p.iteretor();
+			Iterator<Monom> iter1 = temp.iteretor();
+			Monom m, m1;
+			while(iter1.hasNext() && iter.hasNext()) {
+				m = iter.next(); m1 = iter1.next();
+				if(!(m.equals(m1))) {
+					return false;
+				}
+			}
+			return true;
 		}
-		return true;
-	}
-	
-	public boolean equals1(Object p1) {
-		// TODO Auto-generated method stub
-		Polynom p = new Polynom(p1.toString());
-		Polynom_able temp = (Polynom_able) this.copy();
-		if(size(p) != size(temp)) {
-			return false;
-		}
-		
-		Iterator<Monom> iter = p.iteretor();
-		Iterator<Monom> iter1 = temp.iteretor();
-		Monom m, m1;
-		while(iter1.hasNext() && iter.hasNext()) {
-			m = iter.next(); m1 = iter1.next();
-			if(!(m.equals(m1))) {
+		// p1 is Complex Function
+		else {
+			ComplexFunction cf1 = new ComplexFunction(new Monom("0"));
+			function cf2 = cf1.initFromString(obj.toString());
+			if(!(cf1.equals(cf2))) {
 				return false;
 			}
+			// issue in Check Equal on ComplexFunctions
+			// check f(x) in range of [-5,5]  in 0.01 steps
+			/*
+			 * for(double x = -5; x <= 5; x += 0.1) { if(Math.abs(this.f(x) - cf2.f(x)) >
+			 * Monom.EPSILON) { return false; }
+			 */
+			return true;
 		}
-		return true;
+
 	}
 
+	/*
+	 * public boolean equals1(Object p1) { // TODO Auto-generated method stub
+	 * Polynom p = new Polynom(p1.toString()); Polynom_able temp = (Polynom_able)
+	 * this.copy(); if(size(p) != size(temp)) { return false; }
+	 * 
+	 * Iterator<Monom> iter = p.iteretor(); Iterator<Monom> iter1 = temp.iteretor();
+	 * Monom m, m1; while(iter1.hasNext() && iter.hasNext()) { m = iter.next(); m1 =
+	 * iter1.next(); if(!(m.equals(m1))) { return false; } } return true; }
+	 */
 	/**
 	 * check if polynom is zero 
 	 * if empty then return true
@@ -431,15 +447,10 @@ public class Polynom implements Polynom_able{
 	 * counting the number of monoms in polynom 
 	 * @return
 	 */
-	private int size(Polynom_able p1) {
-		int size = 0;
-		Iterator<Monom> iter = p1.iteretor();
-		while(iter.hasNext()) {
-			iter.next();
-			size++;
-		}
-		return size;
-	}
+	/*
+	 * private int size(Polynom_able p1) { int size = 0; Iterator<Monom> iter =
+	 * p1.iteretor(); while(iter.hasNext()) { iter.next(); size++; } return size; }
+	 */
 	/**
 	 * return the private Arraylist of the polynom 
 	 */

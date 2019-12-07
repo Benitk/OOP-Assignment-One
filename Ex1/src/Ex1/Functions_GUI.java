@@ -1,9 +1,21 @@
 package Ex1;
 
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
+import java.util.Scanner;
+
+import com.google.gson.Gson;
+
+
+
 
 
 public class Functions_GUI  implements functions {
@@ -41,7 +53,6 @@ public class Functions_GUI  implements functions {
 
 	@Override
 	public <T> T[] toArray(T[] a) {
-		// TODO Auto-generated method stub
 		return getFunctions_list().toArray(a);
 	}
 
@@ -86,37 +97,86 @@ public class Functions_GUI  implements functions {
 	 * source code for gson: https://www.mkyong.com/java/gson-streaming-to-read-and-write-json/?utm_source=mkyong.com&utm_medium=Referral&utm_campaign=afterpost-related&utm_content=link1
 	 * */
 	public void initFromFile(String file) throws IOException {
-		this.getFunctions_list().clear();
-		Gson_Read_Write r = new Gson_Read_Write(file, this.getFunctions_list());
-		setFunctions_list(r.ReadFromFile());
+		try {
+			Scanner scanner = new Scanner(new File(file));
+			function cf = new ComplexFunction(new Monom("1"));
+			while (scanner.hasNextLine()) {
+				this.getFunctions_list().add(cf.initFromString(scanner.nextLine()));
+			}
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		System.out.println(this.getFunctions_list().toString());
 	}
 
 	@Override
 	public void saveToFile(String file) throws IOException {
-		Gson_Read_Write w = new Gson_Read_Write(file, this.getFunctions_list());
-		w.WriteToFile();
+				File file_to_save = null;
+				FileWriter filewriter = null;
+				try {
+					file_to_save = new File(file);
+					filewriter = new FileWriter(file_to_save);
+					Iterator<function> iter = this.iterator();
+					while(iter.hasNext()) {
+						filewriter.write(iter.next().toString());
+						filewriter.write(System.getProperty( "line.separator" ));
+					}
+					filewriter.close();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						if (filewriter != null) {
+							filewriter.close();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 		
 	}
 	// Overrite our list to new polynoms
 	@Override
 	public void drawFunctions(int width, int height, Range rx, Range ry, int resolution) {
-		// TODO Auto-generated method stub
-		
+		Draw d = new Draw(this.getFunctions_list());
+		d.draw_functions(width, height, rx, ry, resolution);
 	}
 
+	
 	@Override
 	public void drawFunctions(String json_file) {
-		// TODO Auto-generated method stub
-		
+		Gson gson = new Gson();
+		try 
+		{
+			FileReader reader = new FileReader(json_file);
+			Params param = gson.fromJson(reader,Params.class);
+			int height = param.get_height();
+			int width = param.get_width();
+			int resolution = param.get_resolution();
+			Range rx = new Range(param.get_rx()[0],param.get_rx()[1]);
+			Range ry = new Range(param.get_ry()[0],param.get_ry()[1]);
+			drawFunctions(width, height, rx, ry, resolution);
+		} 
+		catch (FileNotFoundException e) {
+			System.out.println("not found using default paramters");
+			Params param = new Params();
+			int height = param.get_height();
+			int width = param.get_width();
+			int resolution = param.get_resolution();
+			Range rx = new Range(param.get_rx()[0],param.get_rx()[1]);
+			Range ry = new Range(param.get_ry()[0],param.get_ry()[1]);
+			drawFunctions(width, height, rx, ry, resolution);
+		}
 	}
-	
 	public ArrayList<function> getFunctions_list() {
-		return functions_list;
+		return _functions_list;
 	}
 	public void setFunctions_list(ArrayList<function> functions_list) {
-		this.functions_list = functions_list;
+		this._functions_list = functions_list;
 	}
 /** **************** private methods and data ******/
-	private ArrayList<function> functions_list;
+	private ArrayList<function> _functions_list;
 	
 }

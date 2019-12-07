@@ -21,24 +21,26 @@ public class PolynomTest {
 	
 	
 	private static void test2() {
-		 Monom m = new Monom("0");
-		 Polynom p1 = new Polynom("+1.0x^1 + 3x^2");
-		 Polynom p2 = new Polynom("-1.0x^4 +2.4x^2 +3.1");
-		 Polynom p3 = new Polynom("+2.0x^3 +4.0x^0");
-		 Polynom p4 = new Polynom("+3.0x^2 +5.0x^1");
+		 Monom m = new Monom("-0");
+		 Polynom p1 = new Polynom("- 0");
+		 Polynom p3 = new Polynom("+1.0x^1  -1.0x^4 +2.4x^2 +3");
+		 Polynom p2 = new Polynom("-1.0x^4 +2.4x^2 +3");
 		 ComplexFunction[] cf = new ComplexFunction[5];
-		cf[0] = new ComplexFunction(m);
-		 cf[1] = new ComplexFunction("plus",p1, p2);
-		 cf[2] = new ComplexFunction("comp",p3, p4);
-		 cf[3] = new ComplexFunction("min", cf[2], p4);
-		 cf[4] = new ComplexFunction("div",cf[2], cf[3]);
-		 System.out.println(cf[0].f(2));
-		 System.out.println(cf[1].f(2));
-		 System.out.println(cf[2].f(2));
-		 System.out.println(cf[3].f(2));
-		 System.out.println(cf[4].toString());
-		 function f =cf[0].initFromString(cf[4].toString());
-		 System.out.println(f);
+		 cf[0] = new ComplexFunction(m);
+		 cf[1] = new ComplexFunction("div",p1, m);
+		 cf[2] = new ComplexFunction("plus",p3, new Monom("0"));
+		/*
+		 * cf[3] = new ComplexFunction("min", cf[2], p4); cf[4] = new
+		 * ComplexFunction("div",cf[2], cf[3]);
+		 */
+		 System.out.println(Double.isInfinite(3/Double.parseDouble("-0")));
+		 function f = cf[0].initFromString("div(plus(3x,x),0)");
+		 System.out.println(f.f(0));
+		
+		/*
+		 * System.out.println(cf[3].f(2)); System.out.println(cf[4].toString());
+		 * function f =cf[0].initFromString(cf[4].toString()); System.out.println(f);
+		 */
 	}
 	
 	private static void test1() {
@@ -98,7 +100,7 @@ public class PolynomTest {
 				System.out.println("test function area for " + p_x_3 + " area' = " + p_x_3.area(-3 , 0, 0.00001) + "\n");
 				
 				System.out.println("test function copy for " + p);
-				Polynom_able p1 = p.copy();
+				Polynom_able p1 = (Polynom_able) p.copy();
 				System.out.println( p1 + " = " + p + "\n");
 				
 				System.out.println("**** next Polynom *** \n");

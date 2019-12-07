@@ -240,8 +240,8 @@ public class Monom implements function{
 			this.set_coefficient(1);
 			this.set_power(1);
 		}
-		//only 0
-		else if(s.length() == 1 && s.equals("0")) {
+		//only 0 or -0
+		else if(s.length() == 1 && s.equals("0") || s.length() == 2 && s.equals("-0")) {
 			this.set_coefficient(0);
 			this.set_power(0);
 		}

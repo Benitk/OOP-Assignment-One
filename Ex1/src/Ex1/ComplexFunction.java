@@ -3,95 +3,31 @@ package Ex1;
 import java.util.ArrayList;
 
 
+
 public class ComplexFunction implements complex_function {
 	
-	// split the string first index is Operation , left side of comma, right side of comma
-	private ArrayList<String> Peeling(String s) {
-		ArrayList<String> arr = new ArrayList<String>();
-		// returns the index of first occurrence of the specified character
-		int index_operation = s.indexOf('(');
-		// returns the last occurrence of the character 
-		int index_comma = s.lastIndexOf(',');
-		// function isnt a complex one
-		if(index_comma == -1) {
-			arr.add("");
-			arr.add(s);
-			return arr;
-		}
-		int number_parenttheses = 0;
-		// this loop is to get the right comma for each parrantiss
-		for(int i = 0;i < s.length(); i++) {
-			if(s.charAt(i) == '(') { number_parenttheses++;}
-			else if(s.charAt(i) == ')') { number_parenttheses--;}
-			// got the right comma
-			if(s.charAt(i) == ',' && number_parenttheses == 1 ) {
-				index_comma = i;
-				break;
-			}
-		} 
-		// Operation
-		arr.add(s.substring(0, index_operation));
-		//left side of comma
-		arr.add(s.substring(index_operation + 1, index_comma));
-		// right side of cooma
-		arr.add(s.substring(index_comma + 1, s.length() - 1));
-		
-		return arr;
-	}
-	private Function_Node Complexfunc_Recrusive(String func_s,Function_Node current) {
-		ArrayList<String> arr = Peeling(func_s);
-		// no operation declare None as current and left as 'f'
-		if(arr.get(0) == "") {
-			current = new Function_Node(null, Operation.None, "None");
-			//current.left = new Function_Node(f, Operation.None);
-			current.setLeft(new Function_Node(new Polynom(func_s), Operation.None, "None"));
-		}
-		else {
-			try {
-				// incase Operation dont in enum
-				current = new Function_Node(null, String_toOper(arr.get(0)),arr.get(0));
-			}
-			catch(Exception e) {
-				// Operation isnt valid
-				current = new Function_Node(null, Operation.Error, "Error");
-			}
-			// set left 
-			current.setLeft(Complexfunc_Recrusive(arr.get(1), current.getLeft()));
-			// set right
-			current.setRight(Complexfunc_Recrusive(arr.get(2), current.getRight()));
-		}
-		return current;
-	}
-	
-	
+	/**
+	 * Constructor building the tree of ComplexFunction.
+	 * @param f
+	 */
 	public ComplexFunction(function f) {
 		if(f == null) {
 			throw new RuntimeException("Error: Not Valid Function");
 		}
 		this.setComplex_root(Complexfunc_Recrusive(f.toString(), this.getComplex_root()));
 	}
-	
-	
-
+	/**
+	 * Constructor building the tree of ComplexFunction
+	 * @param s
+	 * @param f1
+	 * @param f2
+	 */
 	public ComplexFunction(String s, function f1, function f2) {
 		if(f1 == null || f2 == null) {
 			throw new RuntimeException("Error: Not Valid Function");
 		}
-		try {
 			// incase Operation dont in enum
-			this.setComplex_root(new Function_Node(null, String_toOper(s), s));
-		}
-		catch(Exception e) {
-			// Operation isnt valid
-			this.setComplex_root(new Function_Node(null, Operation.Error, "Error"));
-		}
-		
-		// issus probalm divid by zero ***&*
-		/*
-		 * if(this.getComplex_root().getOper().equals(Operation.Divid) &&
-		 * f2.toString().equals("0.0x^0")) { throw new
-		 * RuntimeException("Error: Can't divide by zero"); }
-		 */
+		this.setComplex_root(new Function_Node(null, String_toOper(s), s));
 		this.getComplex_root().setLeft(Complexfunc_Recrusive(f1.toString(), this.getComplex_root().getLeft()));
 		this.getComplex_root().setRight(Complexfunc_Recrusive(f2.toString(), this.getComplex_root().getRight()));
 	}
@@ -117,12 +53,33 @@ public class ComplexFunction implements complex_function {
         // current has oper diffrent from none
         return current.get_operAsString().concat("(".concat(printPostorder(current.getLeft()).concat(",".concat(printPostorder(current.getRight()).concat(")")))));
     } 
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(obj == null || !(obj instanceof function)) {
+			return false;
+		}
+		else{
+			function cf2 = this.initFromString(obj.toString());
+			// issue in Check Equal on ComplexFunctions
+			// check f(x) in range of [-5,5]  in 0.01 steps
+			for(double x = -5; x <= 5; x += 0.01) {
+				if(Math.abs(this.f(x) - cf2.f(x)) > Monom.EPSILON) {
+					return false;
+				}
+			}
+			return true;
+		}
 
+	}
 
 	@Override
 	//compute f(x) for Complex functions using recrusion side function
 	public double f(double x) {
 		double ans = fx(this.getComplex_root(), x);
+		if(Double.isNaN(ans) || Double.isInfinite(ans)) {
+			throw new ArithmeticException("Error: divide by zero.");
+		}
 		return ans;
 	}
 		
@@ -336,6 +293,77 @@ public class ComplexFunction implements complex_function {
      	default:
     		throw new RuntimeException("Error: Not Valid Operation");
 		}
+	}
+
+	/***** private data and methods ****/
+	
+	/**
+	 * this method built the Complex tree in recrusive way after getting 
+	 * the string from string_peeling(), if the string have operation then
+	 * create new Oper,left,right Nodes
+	 * else create new None,left,null(by defualt) Nodes;
+	 * @param func_s
+	 * @param current
+	 * @return current function_node
+	 */
+	private Function_Node Complexfunc_Recrusive(String func_s,Function_Node current) {
+		ArrayList<String> arr = string_peeling(func_s);
+		// no operation declare None as current and left as 'f'
+		if(arr.get(0) == "") {
+			current = new Function_Node(null, Operation.None, "None");
+			current.setLeft(new Function_Node(new Polynom(func_s), Operation.None, "None"));
+		}
+		else {
+			current = new Function_Node(null, String_toOper(arr.get(0)),arr.get(0));
+			// set left 
+			current.setLeft(Complexfunc_Recrusive(arr.get(1), current.getLeft()));
+			// set right
+			current.setRight(Complexfunc_Recrusive(arr.get(2), current.getRight()));
+		}
+		return current;
+	}
+	
+	
+	
+	/**
+	 * This method receive ComplexFunction as string and split it to
+	 * Operation,left(from main comma),right(from main comma) format.
+	 * if the string doesn't have comma then string is polynom/monon and
+	 * return 's' as index 1 in the list
+	 * @param s
+	 * @return list of string
+	 */
+	private ArrayList<String> string_peeling(String s) {
+		ArrayList<String> list = new ArrayList<String>();
+		// returns the index of first occurrence of the specified character
+		int index_operation = s.indexOf('(');
+		// returns the last occurrence of the character 
+		int index_comma = s.lastIndexOf(',');
+		// function isnt a complex one
+		if(index_comma == -1) {
+			list.add("");
+			list.add(s);
+			return list;
+		}
+		int number_parenttheses = 0;
+		// this loop is to get the right comma for each parenthesis
+		for(int i = 0;i < s.length(); i++) {
+			if(s.charAt(i) == '(') { number_parenttheses++;}
+			else if(s.charAt(i) == ')') { number_parenttheses--;}
+			// got the right comma
+			if(s.charAt(i) == ',' && number_parenttheses == 1 ) {
+				index_comma = i;
+				break;
+			}
+		} 
+		// Operation
+		list.add(s.substring(0, index_operation));
+		//left side of comma
+		list.add(s.substring(index_operation + 1, index_comma));
+		// right side of cooma
+		list.add(s.substring(index_comma + 1, s.length() - 1));
+		
+		return list;
 	}
 	private Function_Node _Complex_root;
 }
