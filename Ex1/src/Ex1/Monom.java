@@ -2,6 +2,7 @@
 package Ex1;
 
 import java.util.Comparator;
+import java.util.Iterator;
 
 
 /**
@@ -81,7 +82,6 @@ public class Monom implements function{
 	 * @param m
 	 */
 	public void add(Monom m) {
-		/* try { */
 		if(this.isZero()) {
 			this.set_coefficient(m.get_coefficient());
 			this.set_power(m.get_power());
@@ -120,18 +120,61 @@ public class Monom implements function{
 	// you may (always) add other methods.
 	
 	/**
-	 * compare two monoms 
-	 * @param o2
+	 * compare monom and object,check instanceof 
+	 * and handle accordingly 
+	 * @param obj
 	 * @return true if equal else false
 	 */
-	public Boolean equals(Monom m) {
-		if(m.isZero() && this.isZero()) {
+	public boolean equals(Object obj) {
+		if(obj == null || !(obj instanceof function)) {
+			return false;
+		}
+		else if(obj instanceof Monom) {
+			Monom m = new Monom(obj.toString());
+			if(m.isZero() && this.isZero()) {
+				return true;
+			}
+			int dpower = m.get_power() - this.get_power();
+			double dcoeff = m.get_coefficient() - this.get_coefficient();
+			if(dpower == 0 && Math.abs(dcoeff) < EPSILON) {return true;}
+			return false;
+		}
+		else if(obj instanceof Polynom){
+			Polynom p = new Polynom(obj.toString());
+			Polynom temp = new Polynom(this.toString());
+			// p or temp has the zero_Monom
+			int index_p = p.get_polynom().size() - 1;
+			int index_temp = temp.get_polynom().size() - 1;
+			if(p.get_polynom().get(index_p).isZero()){
+				p.get_polynom().remove(index_p);
+			}
+			if(temp.get_polynom().get(index_temp).isZero()){
+				temp.get_polynom().remove(index_temp);
+			}
+			// check if size is equal after omitting the zero monom
+			if(p.get_polynom().size() != temp.get_polynom().size()) {
+				return false;
+			}
+			Iterator<Monom> iter = p.iteretor();
+			Iterator<Monom> iter1 = temp.iteretor();
+			Monom m, m1;
+			while(iter1.hasNext() && iter.hasNext()) {
+				m = iter.next(); m1 = iter1.next();
+				if(!(m.equals(m1))) {
+					return false;
+				}
+			}
 			return true;
 		}
-		int dpower = m.get_power() - this.get_power();
-		double dcoeff = m.get_coefficient() - this.get_coefficient();
-		if(dpower == 0 && Math.abs(dcoeff) < EPSILON) {return true;}
-		return false;
+		// obj is Complex Function
+		else {
+			ComplexFunction cf1 = new ComplexFunction(this);
+			function cf2 = cf1.initFromString(obj.toString());
+			if(!(cf1.equals(cf2))) {
+				return false;
+			}
+			return true;
+		}
 	}
 	
 	/**

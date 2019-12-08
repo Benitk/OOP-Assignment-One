@@ -72,7 +72,6 @@ public class Polynom implements Polynom_able{
 	 */
 	@Override
 	public double f(double x) {
-		// TODO Auto-generated method stub
 		Iterator<Monom> iter = this.iteretor();
 		double f_x = 0;
 		Monom m;
@@ -92,7 +91,6 @@ public class Polynom implements Polynom_able{
 	 */
 	@Override
 	public void add(Polynom_able p1) {
-		// TODO Auto-generated method stub
 		Polynom_able temp = (Polynom_able) p1.copy();
 		Iterator<Monom> iter = temp.iteretor();
 		Monom m;
@@ -114,7 +112,6 @@ public class Polynom implements Polynom_able{
 	 */
 	@Override
 	public void add(Monom m1) {
-		// TODO Auto-generated method stub
 		this.get_polynom().add(m1);
 		// unions monoms of same power
 		union_monoms();
@@ -129,7 +126,6 @@ public class Polynom implements Polynom_able{
 	 */
 	@Override
 	public void substract(Polynom_able p1) {
-		// TODO Auto-generated method stub
 		Polynom_able temp = (Polynom_able) p1.copy();
 		Iterator<Monom> iter = temp.iteretor();
 		Monom m;
@@ -149,7 +145,6 @@ public class Polynom implements Polynom_able{
 	 */
 	@Override
 	public void multiply(Monom m1) {
-		// TODO Auto-generated method stub
 		Iterator<Monom> iter = this.iteretor();
 		Monom m;
 		while(iter.hasNext()) {
@@ -171,7 +166,6 @@ public class Polynom implements Polynom_able{
 	 */
 	@Override
 	public void multiply(Polynom_able p1) {
-		// TODO Auto-generated method stub
 		// in case p1 is this.polynom , need to copy twice 
 		Polynom_able temp = (Polynom_able) this.copy();
 		Polynom_able temp1 = (Polynom_able) p1.copy();
@@ -194,14 +188,13 @@ public class Polynom implements Polynom_able{
 		this.get_polynom().sort(Monom.getComp());
 	}
 	/**
-	 * compare polynom with function than check what instanceof 
-	 * then iterate both and check if each monom is equal
+	 * compare polynom and object,check instanceof 
+	 * and handle accordingly 
 	 * @param o2
 	 * @return true if equal else false
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
 		if(obj == null || !(obj instanceof function)) {
 			return false;
 		}
@@ -231,33 +224,17 @@ public class Polynom implements Polynom_able{
 			}
 			return true;
 		}
-		// p1 is Complex Function
+		// obj is Complex Function
 		else {
-			ComplexFunction cf1 = new ComplexFunction(new Monom("0"));
-			function cf2 = cf1.initFromString(obj.toString());
-			if(!(cf1.equals(cf2))) {
+			ComplexFunction cf1 = new ComplexFunction(this);
+			function cf = cf1.initFromString(obj.toString());
+			if(!(cf1.equals(cf))) {
 				return false;
 			}
-			// issue in Check Equal on ComplexFunctions
-			// check f(x) in range of [-5,5]  in 0.01 steps
-			/*
-			 * for(double x = -5; x <= 5; x += 0.1) { if(Math.abs(this.f(x) - cf2.f(x)) >
-			 * Monom.EPSILON) { return false; }
-			 */
 			return true;
 		}
 
 	}
-
-	/*
-	 * public boolean equals1(Object p1) { // TODO Auto-generated method stub
-	 * Polynom p = new Polynom(p1.toString()); Polynom_able temp = (Polynom_able)
-	 * this.copy(); if(size(p) != size(temp)) { return false; }
-	 * 
-	 * Iterator<Monom> iter = p.iteretor(); Iterator<Monom> iter1 = temp.iteretor();
-	 * Monom m, m1; while(iter1.hasNext() && iter.hasNext()) { m = iter.next(); m1 =
-	 * iter1.next(); if(!(m.equals(m1))) { return false; } } return true; }
-	 */
 	/**
 	 * check if polynom is zero 
 	 * if empty then return true
@@ -266,7 +243,6 @@ public class Polynom implements Polynom_able{
 	 */
 	@Override
 	public boolean isZero() {
-		// TODO Auto-generated method stub
 		//empty polynom
 		if(this.get_polynom().size() == 0) {return true;}
 		Monom m;
@@ -335,14 +311,8 @@ public class Polynom implements Polynom_able{
 	 */
 	@Override
 	public function copy() {
-		// TODO Auto-generated method stub
 		function p1 = new Polynom(this.toString());
 		return p1;
-		/*
-		 * Polynom p1; String polynom1 = ""; Iterator<Monom> iter = this.iteretor();
-		 * Monom m; while(iter.hasNext()) { m = iter.next(); polynom1 +=
-		 * m.toString().concat(" "); } p1 = new Polynom(polynom1); return p1;
-		 */
 	}
 	/** 
 	 * this method returns the derivative polynom of this.
@@ -350,7 +320,6 @@ public class Polynom implements Polynom_able{
 	 */
 	@Override
 	public Polynom_able derivative() {
-		// TODO Auto-generated method stub
 		Polynom p1;
 		String polynom1 = "";
 		Iterator<Monom> iter = this.iteretor();
@@ -390,7 +359,6 @@ public class Polynom implements Polynom_able{
 	 */
 	@Override
 	public Iterator<Monom> iteretor() {
-		// TODO Auto-generated method stub
 		return get_polynom().iterator();
 	}
 	/**
@@ -407,7 +375,21 @@ public class Polynom implements Polynom_able{
 		return ans.trim();
 	}
  
-	// other functions 
+	/**
+	 * return the private Arraylist of the polynom 
+	 */
+	public ArrayList<Monom> get_polynom() {
+		return this._polynom;
+	}
+	
+	@Override
+	public function initFromString(String s) {
+		function f = new Polynom(s);
+		return f;
+	}
+	
+	
+	//****************** Private Methods and Data *****************
 	
 	/**
 	 * iterate on the polynom and check if each monom has other monom of the same power if there is
@@ -443,29 +425,7 @@ public class Polynom implements Polynom_able{
 		}
 		
 	}
-	/**
-	 * counting the number of monoms in polynom 
-	 * @return
-	 */
-	/*
-	 * private int size(Polynom_able p1) { int size = 0; Iterator<Monom> iter =
-	 * p1.iteretor(); while(iter.hasNext()) { iter.next(); size++; } return size; }
-	 */
-	/**
-	 * return the private Arraylist of the polynom 
-	 */
-	public ArrayList<Monom> get_polynom() {
-		return this._polynom;
-	}
-	
-	@Override
-	public function initFromString(String s) {
-		function f = new Polynom(s);
-		return f;
-	}
-	
-	
-	//****************** Private Methods and Data *****************
+
 	
 	private void set_polynom_zero(){
 		this._polynom = new ArrayList<Monom>(0);
@@ -473,6 +433,8 @@ public class Polynom implements Polynom_able{
 	private void set_polynom(){
 		this._polynom = new ArrayList<Monom>();
 	}
-	
+	/**
+	 * represents a collection of monoms
+	 */
 	private ArrayList<Monom> _polynom;
 }

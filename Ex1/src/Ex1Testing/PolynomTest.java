@@ -22,13 +22,15 @@ public class PolynomTest {
 	
 	private static void test2() {
 		 Monom m = new Monom("-0");
-		 Polynom p1 = new Polynom("- 0");
+		 Polynom p1 = new Polynom("1");
 		 Polynom p3 = new Polynom("+1.0x^1  -1.0x^4 +2.4x^2 +3");
 		 Polynom p2 = new Polynom("-1.0x^4 +2.4x^2 +3");
 		 ComplexFunction[] cf = new ComplexFunction[5];
 		 cf[0] = new ComplexFunction(m);
 		 cf[1] = new ComplexFunction("div",p1, m);
 		 cf[2] = new ComplexFunction("plus",p3, new Monom("0"));
+		 function s = cf[0].initFromString("div(x,0)");
+		 System.out.println(p1);
 		/*
 		 * cf[3] = new ComplexFunction("min", cf[2], p4); cf[4] = new
 		 * ComplexFunction("div",cf[2], cf[3]);

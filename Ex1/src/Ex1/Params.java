@@ -1,5 +1,11 @@
 package Ex1;
-
+/**
+ * this class represent set of parameters for the GUI windo and the range & resolution
+ * that will be used for drawing functions with StdwDraw
+ * @author ben itzhak
+ * @author shani cohen
+ *
+ */
 public class Params {
 	
 	public int get_width() {
@@ -41,6 +47,9 @@ public class Params {
 	public void set_ry(int[] _ry) {
 		this.Range_Y = _ry;
 	}
+	/**
+	 * constructor using defualt Values
+	 */
 	public Params() {
 		set_width(1000);
 		set_height(700);
@@ -50,6 +59,14 @@ public class Params {
 		set_ry(r);
 		
 	}	
+	/**
+	 * constructor that get values to set the parameters 
+	 * @param w
+	 * @param h
+	 * @param res
+	 * @param rx
+	 * @param ry
+	 */
 	public Params(int w, int h, int res, int[] rx, int[] ry) {
 		set_width(w);
 		set_height(h);

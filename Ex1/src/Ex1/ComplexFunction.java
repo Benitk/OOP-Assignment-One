@@ -3,11 +3,16 @@ package Ex1;
 import java.util.ArrayList;
 
 
-
+/** This class represents a complex function of type y=g(f1(x), f2(x)), where both f1, f2 are functions (or complex functions), 
+ * y and x are real numbers and g is an operation: plus, mul, div, max, min, comp (f1(f2(x))).
+**/
 public class ComplexFunction implements complex_function {
 	
 	/**
-	 * Constructor building the tree of ComplexFunction.
+	 * Constructor of ComplexFunction using inner class to create tree of Complexfunction, 
+	 * function also could be a Complexfunction 
+	 * using Complex_Recrusive method that build the tree recrusively by getting each function
+	 * toString and current root
 	 * @param f
 	 */
 	public ComplexFunction(function f) {
@@ -17,7 +22,11 @@ public class ComplexFunction implements complex_function {
 		this.setComplex_root(Complexfunc_Recrusive(f.toString(), this.getComplex_root()));
 	}
 	/**
-	 * Constructor building the tree of ComplexFunction
+	 * Constructor of ComplexFunction using inner class to create tree of
+	 * Complexfunction, operation as is the root, left and right are functions
+	 * function also could be a Complexfunction 
+	 * using Complex_Recrusive method that build the tree recrusively by getting each function
+	 * toString and current root
 	 * @param s
 	 * @param f1
 	 * @param f2
@@ -31,40 +40,33 @@ public class ComplexFunction implements complex_function {
 		this.getComplex_root().setLeft(Complexfunc_Recrusive(f1.toString(), this.getComplex_root().getLeft()));
 		this.getComplex_root().setRight(Complexfunc_Recrusive(f2.toString(), this.getComplex_root().getRight()));
 	}
-	
+	/** 
+	 * return a String representing this complex function
+	 * using getPostorder()
+	 */
 	public String toString() {
-		String ans = printPostorder(this.getComplex_root());
+		String ans = getPostorder(this.getComplex_root());
 		return ans;
 	}
 	
-	private String printPostorder(Function_Node current){ 
-		//base case
-		
-		/*
-		 * if(current == null) { return ""; }
-		 */
-        if (current.getOper() == Operation.None && current.getFunc() == null) {
-            return printPostorder(current.getLeft());
-        }
-        // current has function
-        else if(current.getOper() == Operation.None) {
-        	return current.getFunc().toString();
-        }
-        // current has oper diffrent from none
-        return current.get_operAsString().concat("(".concat(printPostorder(current.getLeft()).concat(",".concat(printPostorder(current.getRight()).concat(")")))));
-    } 
+	/**
+	 * check if ComplexFunction equals to given object
+	 * if isnt even a instaceof function or null return false
+	 * else compring f(x) in rage of [-5,5] in 0.01 steps
+	 * @param obj
+	 * return boolean if equal or not
+	 */
 	@Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
 		if(obj == null || !(obj instanceof function)) {
 			return false;
 		}
 		else{
-			function cf2 = this.initFromString(obj.toString());
+			function cf = this.initFromString(obj.toString());
 			// issue in Check Equal on ComplexFunctions
 			// check f(x) in range of [-5,5]  in 0.01 steps
 			for(double x = -5; x <= 5; x += 0.01) {
-				if(Math.abs(this.f(x) - cf2.f(x)) > Monom.EPSILON) {
+				if(Math.abs(this.f(x) - cf.f(x)) > Monom.EPSILON) {
 					return false;
 				}
 			}
@@ -72,7 +74,10 @@ public class ComplexFunction implements complex_function {
 		}
 
 	}
-
+	/** compute f(x) for Complex functions using recrusive function fx()
+	 * @param x
+	 * return f(x)
+	 */
 	@Override
 	//compute f(x) for Complex functions using recrusion side function
 	public double f(double x) {
@@ -82,42 +87,10 @@ public class ComplexFunction implements complex_function {
 		}
 		return ans;
 	}
-		
-	private double fx(Function_Node current, double x){ 
 
-        if (current.getOper() == Operation.None && current.getFunc() == null) {
-            return fx(current.getLeft(), x);
-        }
-        // current has function
-        else if(current.getOper() == Operation.None) {
-        	return current.getFunc().f(x);
-        }
-        // current has operation diffrent from none compute is fx
-        switch(current.getOper().toString()){
-        	case "Plus":
-        		return fx(current.getLeft(), x) + fx(current.getRight(), x);
-        		
-        	case "Times":
-        		return fx(current.getLeft(), x) * fx(current.getRight(), x);
-        		
-        	case "Divid":
-        		return fx(current.getLeft(), x) / fx(current.getRight(), x);
-        		
-        	case "Max":
-        		return Math.max(fx(current.getLeft(), x),fx(current.getRight(), x));
-        		
-        	case "Min":
-        		return Math.min(fx(current.getLeft(), x),fx(current.getRight(), x));
-        		
-        	case "Comp":
-        		return fx(current.getLeft(),fx(current.getRight(), x));
-        		
-        	default:
-        		throw new RuntimeException("Error: Not Valid Operation");
-        }
-	}
 	@Override
-	//creating new ComplexFunction using tmp polynom, then creating other complexroot from the string and replace the root
+	//creating new ComplexFunction using tmp polynom, then creating other complexroot from the string 
+	//then replace the root
 	public function initFromString(String s) {
 		Function_Node new_root = null;
 		new_root = Complexfunc_Recrusive(s, new_root);
@@ -126,13 +99,18 @@ public class ComplexFunction implements complex_function {
 		function f = new ComplexFunction(cf);
 		return f;
 	}
-
+	/** 
+	 * return a function representing this complex function
+	 */
 	@Override
 	public function copy() {
 		function f = new ComplexFunction(this);
 		return f;
 	}
-
+	/** Add to this complex_function the f1 complex_function
+	 * 
+	 * @param f1 the complex_function which will be added to this complex_function.
+	 */
 	@Override
 	public void plus(function f1) {
 		//pointer to the complex root
@@ -143,6 +121,10 @@ public class ComplexFunction implements complex_function {
 		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
 
+	/** Multiply this complex_function with the f1 complex_function
+	 * 
+	 * @param f1 the complex_function which will be multiply be this complex_function.
+	 */
 	@Override
 	public void mul(function f1) {
 		//pointer to the complex root
@@ -152,7 +134,10 @@ public class ComplexFunction implements complex_function {
 		this.getComplex_root().setLeft(left_subtree);
 		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
-
+	/** Divides this complex_function with the f1 complex_function
+	 * 
+	 * @param f1 the complex_function which will be divid this complex_function.
+	 */
 	@Override
 	public void div(function f1) {
 		//pointer to the complex root
@@ -163,7 +148,10 @@ public class ComplexFunction implements complex_function {
 		this.getComplex_root().setLeft(left_subtree);
 		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
-
+	/** Computes the maximum over this complex_function and the f1 complex_function
+	 * 
+	 * @param f1 the complex_function which will be compared with this complex_function - to compute the maximum.
+	 */
 	@Override
 	public void max(function f1) {
 		//pointer to the complex root
@@ -173,7 +161,10 @@ public class ComplexFunction implements complex_function {
 		this.getComplex_root().setLeft(left_subtree);
 		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
-
+	/** Computes the minimum over this complex_function and the f1 complex_function
+	 * 
+	 * @param f1 the complex_function which will be compared with this complex_function - to compute the minimum.
+	 */
 	@Override
 	public void min(function f1) {
 		//pointer to the complex root
@@ -183,7 +174,10 @@ public class ComplexFunction implements complex_function {
 		this.getComplex_root().setLeft(left_subtree);
 		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
-
+	/**
+	 * This method wrap the f1 complex_function with this function: this.f(f1(x))
+	 * @param f1 complex function
+	 */
 	@Override
 	public void comp(function f1) {
 		//pointer to the complex root
@@ -193,16 +187,19 @@ public class ComplexFunction implements complex_function {
 		this.getComplex_root().setLeft(left_subtree);
 		this.getComplex_root().setRight(right_subtree.getComplex_root());
 	}
-
+	/** returns the left side of the complex function - this side should always exists (should NOT be null).
+	 * @return a function representing the left side of this complex funcation
+	 */
 	@Override
-	// creating temp Complex function
-	public function left() {;
+	public function left() {
 		ComplexFunction cf = new ComplexFunction(new Polynom("1"));
 		cf.setComplex_root(this.getComplex_root().getLeft());
 		function f = new ComplexFunction(cf);
 		return f;
 	}
-
+	/** returns the right side of the complex function - this side might not exists (aka equals null).
+	 * @return a function representing the left side of this complex funcation
+	 */
 	@Override
 	public function right() {
 		ComplexFunction cf = new ComplexFunction(new Polynom("1"));
@@ -210,10 +207,16 @@ public class ComplexFunction implements complex_function {
 		function f = new ComplexFunction(cf);
 		return f;
 	}
+	/**
+	 * The complex_function oparation: plus, mul, div, max, min, comp
+	 * @return Operation
+	 */
 	@Override
 	public Operation getOp() {
 		return this.getComplex_root().getOper();
 	}
+	
+	
 	public Function_Node getComplex_root() {
 		return this._Complex_root;
 	}
@@ -222,7 +225,15 @@ public class ComplexFunction implements complex_function {
 	}
 
 
-	/********* private fields ********/
+	/********* private fields, inner class and methods ********/
+	/**
+	 * 
+	 * @author ben itzhak
+	 * @author shani cohen
+	 *this inner class Function_Node used as a Node/tree
+	 *of functions and operations has Operation,
+	 * functions, OperAsString and left, right fields.
+	 */
 	private class Function_Node{ 
 		private Operation _oper;
 		private String _operAsString;
@@ -267,7 +278,12 @@ public class ComplexFunction implements complex_function {
 		public void set_operAsString(String operAsString) {
 			this._operAsString = operAsString;
 		} 
-
+		/**
+		 * inner class constructor
+		 * @param f
+		 * @param o
+		 * @param s
+		 */
 		public Function_Node(function f, Operation o, String s) {
 			set_operAsString(s);
 			setFunc(f); 
@@ -276,6 +292,76 @@ public class ComplexFunction implements complex_function {
 			setRight(null); 
 		}
 	}
+	/**
+	 * compute f(x) for Complex functions recrusivly by checking the fields on the
+	 * function_node
+	 *  if Operation None, and function null return 
+	 * current.left - f(x)
+	 * else if Operation None and has function return the f(x)
+	 * else check what operation and calc the f(x).
+	 * 
+	 * @param current
+	 * @param x
+	 * @return
+	 */
+	private double fx(Function_Node current, double x){ 
+
+        if (current.getOper() == Operation.None && current.getFunc() == null) {
+            return fx(current.getLeft(), x);
+        }
+        // current has function
+        else if(current.getOper() == Operation.None) {
+        	return current.getFunc().f(x);
+        }
+        // current has operation diffrent from none compute is fx
+        switch(current.getOper().toString()){
+        	case "Plus":
+        		return fx(current.getLeft(), x) + fx(current.getRight(), x);
+        		
+        	case "Times":
+        		return fx(current.getLeft(), x) * fx(current.getRight(), x);
+        		
+        	case "Divid":
+        		return fx(current.getLeft(), x) / fx(current.getRight(), x);
+        		
+        	case "Max":
+        		return Math.max(fx(current.getLeft(), x),fx(current.getRight(), x));
+        		
+        	case "Min":
+        		return Math.min(fx(current.getLeft(), x),fx(current.getRight(), x));
+        		
+        	case "Comp":
+        		return fx(current.getLeft(),fx(current.getRight(), x));
+        		
+        	default:
+        		throw new RuntimeException("Error: Not Valid Operation");
+        }
+	}
+	
+	/**
+	 * getting Complexfunction string recrusivly
+	 * by checking the fields on the Function_Node if current has function/Operation or both
+	 * @param current
+	 * @return ComplexFunction as String
+	 */
+	private String getPostorder(Function_Node current){ 
+
+        if (current.getOper() == Operation.None && current.getFunc() == null) {
+            return getPostorder(current.getLeft());
+        }
+        // current has function
+        else if(current.getOper() == Operation.None) {
+        	return current.getFunc().toString();
+        }
+        // current has oper diffrent from none
+        return current.get_operAsString().concat("(".concat(getPostorder(current.getLeft()).concat(",".concat(getPostorder(current.getRight()).concat(")")))));
+    } 
+	/**
+	 * this method Convert string to Operation
+	 * if the string don't match any case throw error
+	 * @param s
+	 * @return Operation from string
+	 */
 	private Operation String_toOper(String s) {
 		switch(s) {
 		 case "plus":
@@ -294,8 +380,7 @@ public class ComplexFunction implements complex_function {
     		throw new RuntimeException("Error: Not Valid Operation");
 		}
 	}
-
-	/***** private data and methods ****/
+	
 	
 	/**
 	 * this method built the Complex tree in recrusive way after getting 

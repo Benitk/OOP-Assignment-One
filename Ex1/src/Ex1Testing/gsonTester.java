@@ -13,6 +13,7 @@ public class gsonTester {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
+		
 		Functions_GUI f = new Functions_GUI();
 		f.initFromFile("function_file.txt");
 		f.saveToFile("check.txt");
@@ -25,7 +26,7 @@ public class gsonTester {
 		//f.add(new Polynom("5+ x^2"));
 		Range rx = new Range(-15,10);
 		Range ry = new Range(-15,10);
-		int resolution = 1000;
+		int resolution = 200;
 	    f.drawFunctions(1000, 700, rx, ry, resolution);
 		/*
 		 * f.saveToFile("gson_test");

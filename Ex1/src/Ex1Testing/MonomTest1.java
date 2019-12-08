@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import Ex1.Monom;
+import Ex1.function;
 
 class MonomTest1 {
 	Monom []m = new Monom[5];
@@ -85,12 +85,16 @@ class MonomTest1 {
 	}
 	@Test
 	void testEquals() {
+		Object obj = new Integer(4);
 		Monom []ans = {new Monom(m[0].toString()),new Monom(m[1].toString()),new Monom(m[2].toString()),new Monom(m[3].toString()),new Monom(m[4].toString())};
 		for(int i = 0; i < 5; i++) {
 			Monom expected = ans[i];
 			Monom actual = m[i];
 			if(!(expected.equals(actual))) {
 				fail("expected: "+expected.toString()+" but was: "+actual.toString());
+			}
+			if(m[i].equals(obj)) {
+				fail("expected: false obj isn't instanceof function");
 			}
 		}
 	}
@@ -107,5 +111,19 @@ class MonomTest1 {
 			assertEquals(expected_string, actual_string, "Test initFromString and copy");
 			assertEquals(expected_f, actual_f, "Test initFromString and copy");
 		}
+	}
+	@Test
+	void test_badString() {
+		int expected_errors = 5;
+		int actual_errors = 0;
+		String []bad_Monoms= {"+1.0x^^1", "-1.0^1", "--4.6x^2", "+0.0x^-5", "-2.6xx^0"};
+		for(int i = 0; i < 5; i++) {
+			try {
+			function f = new Monom(bad_Monoms[i]);
+			}catch(Exception e) {
+				actual_errors++;
+			}
+		}
+		assertEquals(expected_errors, actual_errors);
 	}
 }
