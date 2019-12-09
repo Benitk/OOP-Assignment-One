@@ -8,6 +8,12 @@ import org.junit.jupiter.api.Test;
 import Ex1.Monom;
 import Ex1.Polynom;
 import Ex1.function;
+/**
+ * 
+ * @author ben itzhak
+ * @author shani cohen
+ *main test for the Polynom class
+ */
 
 class PolynomTestjUNIT {
 	Polynom[] p1 = new Polynom[5];
