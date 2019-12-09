@@ -1,78 +1,136 @@
 package Ex1Testing;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import Ex1.Monom;
+import Ex1.function;
+
 
 /**
- * This class represents a simple (naive) tester for the Monom class, Note: <br>
- * (i) The class is NOT a JUNIT - (i.e., educational reasons) - should be
- * changed to a proper JUnit in Ex1. <br>
- * (ii) This tester should be extend in order to test ALL the methods and
- * functionality of the Monom class. <br>
- * (iii) Expected output: <br>
- * ***** Test1: ***** <br>
- * 0) 2.0 isZero: false f(0) = 2.0 <br>
- * 1) -1.0x isZero: false f(1) = -1.0 <br>
- * 2) -3.2x^2 isZero: false f(2) = -12.8 <br>
- * 3) 0 isZero: true f(3) = 0.0 <br>
- ***** Test2: ***** <br>
- * 0) 0 isZero: true eq: true <br>
- * 1) -1.0 isZero: false eq: true <br>
- * 2) -1.3x isZero: false eq: true <br>
- * 3) -2.2x^2 isZero: false eq: true <br>
+ * 
+ * @author ben itzhak
+ * @author shani cohen
+ * main test for the Monom class
  */
-public class MonomTest {
-	public static void main(String[] args) {	
-		  test1(); 
-	}
-	/**
-	 * testing all the methods in Monom class
-	 * loop on an array of Monoms strings
-	 * That the first part is considered good monoms and the second part is considered bad monoms
-	 * then printing the number of exceptions
-	 */
-	private static void test1() {
-		System.out.println("*****  Test1:  Monom functions  *****");
-		String monom_string = "";
-		int exception_counter = 0;
-		// good and bad example of monoms
-		String[] monoms = {"x", "-x", "-4.6X^2", "0", "-2.6","10x^1", "(x)","-5.5x3", "2x^2.5", "bx^3", "2x^^3","x^-1", "x^b", "3xx" };
-		Monom m_2x = new Monom("2x");
+class MonomTest1 {
+	private Monom []m = new Monom[5];
 	
-		for (int i = 0; i < monoms.length; i++) {
+	@BeforeAll
+	static void printinit() {
+		System.out.println("initialize array of monoms before each test");
+		System.out.println("+1.0x^1, -1.0x^1, -4.6x^2, +0.0x^0, -2.6x^0");
+	}
+	
+	@BeforeEach
+	void init()
+	{
+		 m[0] = new Monom("x");
+		 m[1] = new Monom("-x");
+		 m[2] = new Monom("-4.6X^2");
+		 m[3] = new Monom("0");
+		 m[4] = new Monom("-2.6");
+	}
+	
+	@Test
+	void testDerivative() {
+		Monom []ans = {new Monom("1"),new Monom("-1"),new Monom("-9.2x"),new Monom("0"),new Monom("0")};
+		for(int i = 0; i < 5; i++) {
+			String expected = ans[i].toString();
+			String actual = m[i].derivative().toString();
+			assertEquals(expected, actual, "Test derivative");
+		}
+	}
+	@Test
+	void testF() {
+		int x = 2;
+		double []ans = {2, -2, -18.4, 0, -2.6};
+		for(int i = 0; i < 5; i++) {
+			double expected = ans[i];
+			double actual = m[i].f(x);
+			assertEquals(expected, actual, "Test f(2)");
+		}
+	}
+	@Test
+	void testisZero() {
+		Boolean []ans = {false, false, false, true, false};
+		for(int i = 0; i < 5; i++) {
+			Boolean expected = ans[i];
+			Boolean actual = m[i].isZero();
+			assertEquals(expected, actual, "Test isZero");
+		}
+	}
+	@Test
+	void testAdd() {
+		Monom m1 = new Monom("3x");
+		Monom []ans = {new Monom("4x"),new Monom("2x"),new Monom("-4.6x^2"),new Monom("3x"),new Monom("-2.6")};
+		for(int i = 0; i < 5; i++) {
+			String expected = ans[i].toString();
 			try {
-				Monom m = new Monom(monoms[i]);
-				
-				System.out.println("test function f(x) for " + m + " f("+i+") = " + m.f(i) + "\n");
-
-				System.out.println("test function derivative for " + m + " f(x)' = " + m.derivative() + "\n");
-				
-				System.out.println("test function equal for " + m + " to himself");
-				Monom temp = new Monom(m);
-				System.out.println("equal ? " + m.equals(temp) + "\n");
-				System.out.println("test function equal for " + m + " to 2x");
-				System.out.println("equal ? " + m.equals(m_2x) + "\n");
-				
-				System.out.println("test function isZero for " + m + " is Zero ? " + m.isZero() + "\n");
-				
-				System.out.println("test function add for " + m + " with himself");
-				monom_string = m.toString();
-				m.add(m);
-				System.out.println(monom_string + " " + monom_string + " = " + m + "\n");
-				
-				System.out.println("test function multiply for " + m);
-				monom_string = m.toString();
-				m.multipy(m_2x);
-				System.out.println(monom_string + " * 2x = " + m + "\n");
-				System.out.println("**** next Monom *** \n");
-				
+				m[i].add(m1);
 			}catch(Exception e) {
-				exception_counter++;
-				e.printStackTrace();
-				continue;
+				System.out.println("Test Worked, when power is different can't add");
+			}
+			String actual = m[i].toString();
+			assertEquals(expected, actual, "Test add");
+		}
+	}
+	@Test
+	void testMultipy() {
+		Monom m1 = new Monom("3x");
+		Monom []ans = {new Monom("3x^2"),new Monom("-3x^2"),new Monom("-13.8x^3"),new Monom("0"),new Monom("-7.8x")};
+		for(int i = 0; i < 5; i++) {
+			Monom expected = ans[i];
+			m[i].multipy(m1);
+			Monom actual = m[i];
+			if(!(expected.equals(actual))) {
+				fail("expected: "+expected.toString()+" but was: "+actual.toString());
 			}
 		}
-		System.out.println("The number of 'bad monoms' is 8");
-		System.out.println("number of exception is - " + exception_counter);
 	}
-	
+	@Test
+	void testEquals() {
+		Object obj = new Integer(4);
+		Monom []ans = {new Monom(m[0].toString()),new Monom(m[1].toString()),new Monom(m[2].toString()),new Monom(m[3].toString()),new Monom(m[4].toString())};
+		for(int i = 0; i < 5; i++) {
+			Monom expected = ans[i];
+			Monom actual = m[i];
+			if(!(expected.equals(actual))) {
+				fail("expected: "+expected.toString()+" but was: "+actual.toString());
+			}
+			if(m[i].equals(obj)) {
+				fail("expected: false obj isn't instanceof function");
+			}
+		}
+	}
+	@Test
+	void testInitFromString_Copy() {
+		int x = 2;
+		Monom m1 = new Monom("3");
+		String []ans = {"+1.0x^1", "-1.0x^1", "-4.6x^2", "+0.0x^0", "-2.6x^0"};
+		for(int i = 0; i < 5; i++) {
+			String expected_string = m1.initFromString(ans[i]).toString();
+			String actual_string = m[i].copy().toString();
+			double expected_f = m1.initFromString(ans[i]).f(x);
+			double actual_f = m[i].copy().f(x);
+			assertEquals(expected_string, actual_string, "Test initFromString and copy");
+			assertEquals(expected_f, actual_f, "Test initFromString and copy");
+		}
+	}
+	@Test
+	void test_badString() {
+		int expected_errors = 5;
+		int actual_errors = 0;
+		String []bad_Monoms= {"+1.0x^^1", "-1.0^1", "--4.6x^2", "+0.0x^-5", "-2.6xx^0"};
+		for(int i = 0; i < 5; i++) {
+			try {
+				function f = new Monom(bad_Monoms[i]);
+			}catch(Exception e) {
+				actual_errors++;
+			}
+		}
+		assertEquals(expected_errors, actual_errors, "Test bad string of Monoms");
+	}
 }

@@ -12,8 +12,14 @@ import Ex1.Operation;
 import Ex1.Polynom;
 import Ex1.function;
 
+/**
+ * 
+ * @author ben itzhak
+ * @author shani cohen
+ *main test for the ComplexFunction class
+ */
 class ComplexFunctonTest {
-	ComplexFunction []cf = new ComplexFunction[5];
+	private ComplexFunction []cf = new ComplexFunction[5];
 
 	@BeforeAll
 	static void printinit() {
@@ -21,8 +27,8 @@ class ComplexFunctonTest {
 		System.out.println("0,\n"
 				+ "plus(+3.0x^2 +1.0x^1,-1.0x^4 +2.4x^2 +3.1x^0),\n"
 				+ "comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),\n"
-				+ "min(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1),\n"
-				+ "div(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),Max(Comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1))");
+				+ "min(comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1),\n"
+				+ "div(comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),max(comp(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1))");
 	}
 
 	@BeforeEach
@@ -219,11 +225,11 @@ class ComplexFunctonTest {
 			"min(None(+2.0x^3 +4.0x^0,+3.0x^2 +5.0x^1),+3.0x^2 +5.0x^1)"};
 		for(int i = 0; i < 5; i++) {
 			try {
-			function f = new ComplexFunction(cf[0].initFromString(bad_Complexfunctions[i]));
+				function f = new ComplexFunction(cf[0].initFromString(bad_Complexfunctions[i]));
 			}catch(Exception e) {
 				actual_errors++;
 			}
 		}
-		assertEquals(expected_errors, actual_errors,"Test BadStrings");
+		assertEquals(expected_errors, actual_errors,"Test bad strings of ComplexFunction");
 	}
 }

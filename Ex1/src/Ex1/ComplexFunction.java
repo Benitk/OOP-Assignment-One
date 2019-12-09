@@ -27,6 +27,7 @@ public class ComplexFunction implements complex_function {
 	 * function also could be a Complexfunction 
 	 * using Complex_Recrusive method that build the tree recrusively by getting each function
 	 * toString and current root
+	 * Convert 's' to Operation using String_toOper()
 	 * @param s
 	 * @param f1
 	 * @param f2
@@ -37,6 +38,26 @@ public class ComplexFunction implements complex_function {
 		}
 			// incase Operation dont in enum
 		this.setComplex_root(new Function_Node(null, String_toOper(s), s));
+		this.getComplex_root().setLeft(Complexfunc_Recrusive(f1.toString(), this.getComplex_root().getLeft()));
+		this.getComplex_root().setRight(Complexfunc_Recrusive(f2.toString(), this.getComplex_root().getRight()));
+	}
+	/**
+	 * Constructor of ComplexFunction using inner class to create tree of
+	 * Complexfunction, operation as is the root, left and right are functions
+	 * function also could be a Complexfunction 
+	 * using Complex_Recrusive method that build the tree recrusively by getting each function
+	 * toString and current root
+	 * Convert 'oper' to String using Oper_toString()
+	 * @param oper
+	 * @param f1
+	 * @param f2
+	 */
+	public ComplexFunction(Operation oper, function f1, function f2) {
+		if(f1 == null || f2 == null) {
+			throw new RuntimeException("Error: Not Valid Function");
+		}
+			// incase Operation dont in enum
+		this.setComplex_root(new Function_Node(null, oper, Oper_toString(oper)));
 		this.getComplex_root().setLeft(Complexfunc_Recrusive(f1.toString(), this.getComplex_root().getLeft()));
 		this.getComplex_root().setRight(Complexfunc_Recrusive(f2.toString(), this.getComplex_root().getRight()));
 	}
@@ -381,6 +402,30 @@ public class ComplexFunction implements complex_function {
 		}
 	}
 	
+	/**
+	 * this method Convert Operation to string 
+	 * if the oper don't match any case throw error
+	 * @param oper
+	 * @return String from Operation
+	 */
+	private String Oper_toString(Operation oper) {
+		switch(oper) {
+		 case Plus:
+			 return "plus";
+		 case Times:
+			 return "mul";
+		 case Divid:
+			 return "div";
+		 case Max:
+			 return "max";
+		 case Min:
+			 return "min";
+		 case Comp:
+			 return "comp";
+     	default:
+    		throw new RuntimeException("Error: Not Valid Operation");
+		}
+	}
 	
 	/**
 	 * this method built the Complex tree in recrusive way after getting 

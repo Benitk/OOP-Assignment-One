@@ -53,7 +53,7 @@ public class Params {
 	public Params() {
 		set_width(1000);
 		set_height(700);
-		set_resolution(1000);
+		set_resolution(600);
 		int[] r = {-10,10};
 		set_rx(r);
 		set_ry(r);
