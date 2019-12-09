@@ -77,7 +77,7 @@ and has four main Classes.
 4. drawFunctions(String json_file) - Draws all the functions in the collection in a GUI window using the given JSON file using external Gson.jar and StdDraw for drawing
 
 #### Collections builtin methods
-1. size 
+1. size - Returns the number of elements in this list.
 2. isEmpty - Returns true if this list contains no elements.
 3. contains -Returns true if this list contains the specified element.
 4. iterator - Returns an iterator over the elements in this list in proper sequence.
