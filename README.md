@@ -77,18 +77,18 @@ and has four main Classes.
 4. drawFunctions(String json_file) - Draws all the functions in the collection in a GUI window using the given JSON file using external Gson.jar and StdDraw for drawing
 
 #### Collections builtin methods
-1. size - Returns the number of elements in this list.
-2. isEmpty - Returns true if this list contains no elements.
-3. contains -Returns true if this list contains the specified element.
-4. iterator - Returns an iterator over the elements in this list in proper sequence.
-5. toArray - Returns an array containing all of the elements in this list in proper sequence (from first to last element).
-6. toArray(T[] a) - Returns an array containing all of the elements in this list in proper sequence (from first to last element); 
-7. add - Appends the specified element to the end of this list.
-8. remove -  Removes the first occurrence of the specified element from this list, if it is present.
-9. containsAll - Returns true if this collection contains all of the elements in the specified collection.
-10. addAll - Appends all of the elements in the specified collection to the end of this list, in the order that they are returned by the specified collection's Iterator.
-11. removeAll -  Removes from this list all of its elements that are contained in the specified collection.
-12. retainAll - Retains only the elements in this list that are contained in the specified collection.
+1. size - Returns the number of elements in this list
+2. isEmpty - Returns true if this list contains no elements
+3. contains -Returns true if this list contains the specified element
+4. iterator - Returns an iterator over the elements in this list in proper sequence
+5. toArray - Returns an array containing all of the elements in this list in proper sequence (from first to last element)
+6. toArray(T[] a) - Returns an array containing all of the elements in this list in proper sequence (from first to last element)
+7. add - Appends the specified element to the end of this list
+8. remove -  Removes the first occurrence of the specified element from this list, if it is present
+9. containsAll - Returns true if this collection contains all of the elements in the specified collection
+10. addAll - Appends all of the elements in the specified collection to the end of this list, in the order that they are returned by the specified collection's Iterator
+11. removeAll -  Removes from this list all of its elements that are contained in the specified collection
+12. retainAll - Retains only the elements in this list that are contained in the specified collection
 13. clear - Removes all of the elemets from this list
 
-### For Auxiliary,JunitTests classes Please enter our wiki.
+### For Auxiliary classes ,JunitTests and more information, Please visit our wiki.
