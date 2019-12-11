@@ -15,7 +15,7 @@ import Ex1.function;
  *main test for the Polynom class
  */
 
-class PolynomTestjUNIT {
+class PolynomTest {
 	Polynom[] p1 = new Polynom[5];
 
 	@BeforeAll
