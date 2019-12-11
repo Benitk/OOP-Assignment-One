@@ -1,7 +1,7 @@
 # Ex1
 
 
-Project source can be downloaded from https://github.com/Benitk/OOP-Assignment-One.git
+For Installation https://github.com/Benitk/OOP-Assignment-One/wiki/Installation
 
 
 ### Authors:
