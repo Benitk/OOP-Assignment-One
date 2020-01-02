@@ -364,6 +364,7 @@ public class Polynom implements Polynom_able{
 	/**
 	 * return a string of the polynom
 	 */
+	@Override
 	public String toString() {
 		String ans = "";
 		Iterator<Monom> iter = this.iteretor();

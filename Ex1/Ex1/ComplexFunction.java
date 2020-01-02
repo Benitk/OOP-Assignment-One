@@ -65,6 +65,7 @@ public class ComplexFunction implements complex_function {
 	 * return a String representing this complex function
 	 * using getPostorder()
 	 */
+	@Override
 	public String toString() {
 		String ans = getPostorder(this.getComplex_root());
 		return ans;
@@ -100,7 +101,6 @@ public class ComplexFunction implements complex_function {
 	 * return f(x)
 	 */
 	@Override
-	//compute f(x) for Complex functions using recrusion side function
 	public double f(double x) {
 		double ans = fx(this.getComplex_root(), x);
 		if(Double.isNaN(ans) || Double.isInfinite(ans)) {
@@ -109,9 +109,9 @@ public class ComplexFunction implements complex_function {
 		return ans;
 	}
 
+	/*creating new ComplexFunction using tmp polynom, then creating other complexroot from the string 
+	then replace the root*/
 	@Override
-	//creating new ComplexFunction using tmp polynom, then creating other complexroot from the string 
-	//then replace the root
 	public function initFromString(String s) {
 		Function_Node new_root = null;
 		new_root = Complexfunc_Recrusive(s, new_root);

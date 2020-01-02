@@ -50,6 +50,7 @@ public class Monom implements function{
 	 * @param x
 	 * @return f(x) 
 	 */
+	@Override
 	public double f(double x) {
 		double ans=0;
 		double p = this.get_power();
@@ -107,6 +108,7 @@ public class Monom implements function{
 	/**
 	 * return a string of the monom
 	 */
+	@Override
 	public String toString() {
 		String ans;
 		if(this.get_coefficient() < 0) {
@@ -125,6 +127,7 @@ public class Monom implements function{
 	 * @param obj
 	 * @return true if equal else false
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if(obj == null || !(obj instanceof function)) {
 			return false;
