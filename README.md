@@ -1,7 +1,7 @@
 # Ex1
 
 
-Project source can be downloaded from https://github.com/Benitk/OOP-Assignment-One.git
+For Installation https://github.com/Benitk/OOP-Assignment-One/wiki/Installation
 
 
 ### Authors:
@@ -91,4 +91,4 @@ and has four main Classes.
 12. retainAll - Retains only the elements in this list that are contained in the specified collection
 13. clear - Removes all of the elemets from this list
 
-### For Auxiliary classes ,JunitTests and more information, Please visit our wiki.
+### For Auxiliary classes ,Junit5Tests and more information, Please visit our wiki.

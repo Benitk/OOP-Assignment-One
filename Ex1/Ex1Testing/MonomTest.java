@@ -15,7 +15,7 @@ import Ex1.function;
  * @author shani cohen
  * main test for the Monom class
  */
-class MonomTest1 {
+class MonomTest {
 	private Monom []m = new Monom[5];
 	
 	@BeforeAll
